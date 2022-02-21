@@ -14,7 +14,11 @@ import com.example.booksearch.models.VolumeInfo
 
 class BookListAdapter: RecyclerView.Adapter<BookListAdapter.BookListViewHolder>() {
 
-    var bookList = ArrayList<Items>()
+    private var bookList: ArrayList<Items>? = null
+
+    fun setBookList(bookList: ArrayList<Items>?){
+        this.bookList = bookList
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookListViewHolder {
         val view = RowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -22,11 +26,12 @@ class BookListAdapter: RecyclerView.Adapter<BookListAdapter.BookListViewHolder>(
     }
 
     override fun onBindViewHolder(holder: BookListViewHolder, position: Int) {
-        holder.bind(bookList[position])
+        holder.bind(bookList?.get(position)!!)
     }
 
     override fun getItemCount(): Int {
-        return bookList.size
+        if(bookList?.size == null) return 0
+        else return bookList?.size!!
     }
 
     class BookListViewHolder(view: RowLayoutBinding): RecyclerView.ViewHolder(view.root){
@@ -40,12 +45,13 @@ class BookListAdapter: RecyclerView.Adapter<BookListAdapter.BookListViewHolder>(
             tvBookTitle.text = data.volumeInfo?.title
             tvAuthor.text = data.volumeInfo?.authors?.let {
                     TextUtils.join(", ", it)
-            }?: ""
-            tvDescription.text = data.volumeInfo?.description
+            }?: "No authors"
+            tvDescription.text = data.volumeInfo?.description ?: "No description available"
 
             data.volumeInfo?.imageLinks?.smallThumbnail.let{
                 Glide.with(ivBookImage)
                     .load(it)
+                    .placeholder(R.drawable.image_not_available)
                     .circleCrop()
                     .into(ivBookImage)
             }

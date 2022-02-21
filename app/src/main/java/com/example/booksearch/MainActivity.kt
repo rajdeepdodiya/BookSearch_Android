@@ -18,7 +18,7 @@ import com.example.booksearch.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private val TAG: String? = "MY_TAG"
+    private val TAG = "MY_TAG"
     private lateinit var binding: ActivityMainBinding
     lateinit var viewModel: MainActivityViewModel
     lateinit var bookListAdapter: BookListAdapter
@@ -30,22 +30,36 @@ class MainActivity : AppCompatActivity() {
 
         initSearchBox()
         initRecyclerView()
-
     }
 
     private fun initSearchBox(){
-        binding.etBookName.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-            }
-
+        binding.tiEtBookName.addTextChangedListener(object : TextWatcher{
             override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                loadDataFromAPI(s.toString())
+                if (s != null) {
+                    if(s.isNotEmpty()){
+                        loadDataFromAPI(s.toString())
+                    }
+                }
             }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
         })
+
+        binding.tiBookName.setEndIconOnClickListener{
+            binding.tiEtBookName.setText("")
+            bookListAdapter.setBookList(null)
+            bookListAdapter.notifyDataSetChanged()
+        }
+
+//        binding.etBookName.addTextChangedListener(object : TextWatcher{
+//
+//            override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//
+//            }
+//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+//            override fun afterTextChanged(p0: Editable?) {}
+//        })
     }
 
     private fun initRecyclerView(){
@@ -62,13 +76,12 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         viewModel.getBookListObserver().observe(this, Observer<BookListModel>{
             if(it.items != null){
-                bookListAdapter.bookList = it.items!!
+                bookListAdapter.setBookList(it.items)
                 bookListAdapter.notifyDataSetChanged()
-
             }
             else{
                 Toast.makeText(this, "Error in fetching books", Toast.LENGTH_SHORT).show()
-//                Log.e(TAG, "loadDataFromAPI:./. it.items!! == null", )
+                Log.e(TAG, "loadDataFromAPI: it.items == null", )
             }
         })
         viewModel.makeAPICall(query)
