@@ -32,34 +32,26 @@ class MainActivity : AppCompatActivity() {
         initRecyclerView()
     }
 
-    private fun initSearchBox(){
+    private fun initSearchBox() {
 
-        binding.tiEtBookName.addTextChangedListener(object : TextWatcher{
+        binding.tiEtBookName.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (s != null) {
-                    if(s.isNotEmpty()){
+                    if (s.isNotEmpty()) {
                         loadDataFromAPI(s.toString())
                     }
                 }
             }
+
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
         })
 
-        binding.tiBookName.setEndIconOnClickListener{
+        binding.tiBookName.setEndIconOnClickListener {
             binding.tiEtBookName.setText("")
             bookListAdapter.setBookList(null)
             bookListAdapter.notifyDataSetChanged()
         }
-
-//        binding.etBookName.addTextChangedListener(object : TextWatcher{
-//
-//            override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//
-//            }
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-//            override fun afterTextChanged(p0: Editable?) {}
-//        })
     }
 
     private fun initRecyclerView(){
