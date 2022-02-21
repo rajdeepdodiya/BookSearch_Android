@@ -6,7 +6,7 @@ An android app that allows to search and displays a list of books from the Googl
 **Architecture:** MVVM  
 **REST endpoint:** https://www.googleapis.com/books/v1/volumes?q=the%20jungle
 
-Screenr Recording:
+Screen Recording:
 
 <div align="left">
     <img src="/Screenshots/recording.gif" width="200px"</img> 
